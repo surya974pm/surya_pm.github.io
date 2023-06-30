@@ -20,7 +20,7 @@ body {
 body::before {
   content: "";
   position: fixed;
-  background: #040404 url("https://github.com/surya974pm/surya_pm.github.io/blob/61b7bf81286380bd35fa33f300a986d14ef608e4/assets/img/me2.jpg") top right no-repeat;
+  background: #040404 url("../img/bg.jpg") top right no-repeat;
   background-size: cover;
   left: 0;
   right: 0;
