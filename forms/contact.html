@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS with your User ID
+        (function() {
+            emailjs.init("YOUR_USER_ID"); // Replace "YOUR_USER_ID" with your actual EmailJS user ID
+        })();
+    </script>
+</head>
+<body>
+
+    <h2>Contact Us</h2>
+    <form id="contact-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <button type="submit">Send Message</button>
+    </form>
+
+    <p id="response-message" style="display:none;"></p>
+
+    <script>
+        document.getElementById("contact-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Use EmailJS to send form data
+            emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+                .then(function() {
+                    document.getElementById("response-message").textContent = "Thank you! Your message has been sent.";
+                    document.getElementById("response-message").style.display = "block";
+                    document.getElementById("contact-form").reset(); // Clear the form fields
+                }, function(error) {
+                    document.getElementById("response-message").textContent = "Oops! There was a problem sending your message.";
+                    document.getElementById("response-message").style.display = "block";
+                    console.error("Error:", error);
+                });
+        });
+    </script>
+
+</body>
+</html>
