@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Form</title>
+    <title>Contact Form</title>  
+
+    <!-- Load EmailJS -->
     <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    
     <script type="text/javascript">
         // Initialize EmailJS with your User ID
         (function() {
-            emailjs.init("JZuAC-fLdslgkwcEN"); // Replace "YOUR_USER_ID" with your actual EmailJS user ID
+            emailjs.init("JZuAC-fLdslgkwcEN");  // Replace with your actual EmailJS User ID
         })();
     </script>
 </head>
 <body>
 
     <h2>Contact Us</h2>
+    
+    <!-- Contact Form -->
     <form id="contact-form">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
@@ -34,16 +39,19 @@
     <p id="response-message" style="display:none;"></p>
 
     <script>
+        // Form submission handler
         document.getElementById("contact-form").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault(); // Prevent default form submission behavior
 
             // Use EmailJS to send form data
             emailjs.sendForm('surya_pm', 'template_l2of6tn', this)
                 .then(function() {
+                    // On success, show a thank you message
                     document.getElementById("response-message").textContent = "Thank you! Your message has been sent.";
                     document.getElementById("response-message").style.display = "block";
-                    document.getElementById("contact-form").reset(); // Clear the form fields
+                    document.getElementById("contact-form").reset(); // Reset the form fields
                 }, function(error) {
+                    // On error, show an error message
                     document.getElementById("response-message").textContent = "Oops! There was a problem sending your message.";
                     document.getElementById("response-message").style.display = "block";
                     console.error("Error:", error);
