@@ -1,85 +1,59 @@
-/**
-* PHP Email Form Validation - v3.6
-* URL: https://bootstrapmade.com/php-email-form/
-* Author: BootstrapMade.com
-*/
-(function () {
-  "use strict";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form with EmailJS</title>
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("JZuAC-fLdslgkwcEN"); // Replace with your EmailJS user ID
+        })();
+    </script>
+</head>
+<body>
 
-  let forms = document.querySelectorAll('.php-email-form');
+    <form class="php-email-form" id="contact-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
 
-  forms.forEach( function(e) {
-    e.addEventListener('submit', function(event) {
-      event.preventDefault();
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-      let thisForm = this;
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required>
 
-      let action = thisForm.getAttribute('action');
-      let recaptcha = thisForm.getAttribute('data-recaptcha-site-key');
-      
-      if( ! action ) {
-        displayError(thisForm, 'The form action property is not set!');
-        return;
-      }
-      thisForm.querySelector('.loading').classList.add('d-block');
-      thisForm.querySelector('.error-message').classList.remove('d-block');
-      thisForm.querySelector('.sent-message').classList.remove('d-block');
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
 
-      let formData = new FormData( thisForm );
+        <div class="loading" style="display:none;">Loading...</div>
+        <div class="error-message" style="display:none; color:red;"></div>
+        <div class="sent-message" style="display:none; color:green;">Your message has been sent. Thank you!</div>
 
-      if ( recaptcha ) {
-        if(typeof grecaptcha !== "undefined" ) {
-          grecaptcha.ready(function() {
-            try {
-              grecaptcha.execute(recaptcha, {action: 'php_email_form_submit'})
-              .then(token => {
-                formData.set('recaptcha-response', token);
-                php_email_form_submit(thisForm, action, formData);
-              })
-            } catch(error) {
-              displayError(thisForm, error);
-            }
-          });
-        } else {
-          displayError(thisForm, 'The reCaptcha javascript API url is not loaded!')
-        }
-      } else {
-        php_email_form_submit(thisForm, action, formData);
-      }
-    });
-  });
+        <button type="submit">Send Message</button>
+    </form>
 
-  function php_email_form_submit(thisForm, action, formData) {
-    fetch(action, {
-      method: 'POST',
-      body: formData,
-      headers: {'X-Requested-With': 'XMLHttpRequest'}
-    })
-    .then(response => {
-      if( response.ok ) {
-        return response.text();
-      } else {
-        throw new Error(`${response.status} ${response.statusText} ${response.url}`); 
-      }
-    })
-    .then(data => {
-      thisForm.querySelector('.loading').classList.remove('d-block');
-      if (data.trim() == 'OK') {
-        thisForm.querySelector('.sent-message').classList.add('d-block');
-        thisForm.reset(); 
-      } else {
-        throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
-      }
-    })
-    .catch((error) => {
-      displayError(thisForm, error);
-    });
-  }
+    <script>
+        document.getElementById("contact-form").addEventListener('submit', function(event) {
+            event.preventDefault();
 
-  function displayError(thisForm, error) {
-    thisForm.querySelector('.loading').classList.remove('d-block');
-    thisForm.querySelector('.error-message').innerHTML = error;
-    thisForm.querySelector('.error-message').classList.add('d-block');
-  }
+            let thisForm = this;
+            thisForm.querySelector('.loading').style.display = 'block';
+            thisForm.querySelector('.error-message').style.display = 'none';
+            thisForm.querySelector('.sent-message').style.display = 'none';
 
-})();
+            emailjs.sendForm('surya_pm', 'template_6brzkia', thisForm)
+                .then(() => {
+                    thisForm.querySelector('.loading').style.display = 'none';
+                    thisForm.querySelector('.sent-message').style.display = 'block';
+                    thisForm.reset();
+                }, (error) => {
+                    thisForm.querySelector('.loading').style.display = 'none';
+                    thisForm.querySelector('.error-message').innerHTML = error.text;
+                    thisForm.querySelector('.error-message').style.display = 'block';
+                });
+        });
+    </script>
+
+</body>
+</html>
