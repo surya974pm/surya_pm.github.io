@@ -7,7 +7,7 @@
     <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            emailjs.init("template_l2of6tn"); // Replace with your EmailJS user ID
+            emailjs.init("JZuAC-fLdslgkwcEN"); // Replace with your EmailJS user ID
         })();
     </script>
 </head>
@@ -42,7 +42,7 @@
             thisForm.querySelector('.error-message').style.display = 'none';
             thisForm.querySelector('.sent-message').style.display = 'none';
 
-            emailjs.sendForm('surya_pm', 'template_6brzkia', thisForm)
+            emailjs.sendForm('surya_pm', 'template_l2of6tn', thisForm)
                 .then(() => {
                     thisForm.querySelector('.loading').style.display = 'none';
                     thisForm.querySelector('.sent-message').style.display = 'block';
