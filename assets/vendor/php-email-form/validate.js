@@ -7,7 +7,7 @@
     <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            emailjs.init("JZuAC-fLdslgkwcEN"); // Replace with your EmailJS user ID
+            emailjs.init("template_l2of6tn"); // Replace with your EmailJS user ID
         })();
     </script>
 </head>
