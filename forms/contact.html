@@ -8,7 +8,7 @@
     <script type="text/javascript">
         // Initialize EmailJS with your User ID
         (function() {
-            emailjs.init("template_l2of6tn"); // Replace "YOUR_USER_ID" with your actual EmailJS user ID
+            emailjs.init("JZuAC-fLdslgkwcEN"); // Replace "YOUR_USER_ID" with your actual EmailJS user ID
         })();
     </script>
 </head>
@@ -38,7 +38,7 @@
             event.preventDefault(); // Prevent default form submission
 
             // Use EmailJS to send form data
-            emailjs.sendForm('surya_pm', 'template_6brzkia', this)
+            emailjs.sendForm('surya_pm', 'template_l2of6tn', this)
                 .then(function() {
                     document.getElementById("response-message").textContent = "Thank you! Your message has been sent.";
                     document.getElementById("response-message").style.display = "block";
