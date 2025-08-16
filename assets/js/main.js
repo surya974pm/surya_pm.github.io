@@ -55,7 +55,7 @@
   })
 
   /**
-   * Scrool with ofset on links with a class name .scrollto
+   * Scroll to section on nav link click
    */
   on('click', '#navbar .nav-link', function(e) {
     let section = select(this.hash)
@@ -63,8 +63,6 @@
       e.preventDefault()
 
       let navbar = select('#navbar')
-      let header = select('#header')
-      let sections = select('section', true)
       let navlinks = select('#navbar .nav-link', true)
 
       navlinks.forEach((item) => {
@@ -80,63 +78,39 @@
         navbarToggle.classList.toggle('bi-x')
       }
 
-      if (this.hash == '#header') {
-        header.classList.remove('header-top')
-        sections.forEach((item) => {
-          item.classList.remove('section-show')
-        })
-        return;
-      }
-
-      if (!header.classList.contains('header-top')) {
-        header.classList.add('header-top')
-        setTimeout(function() {
-          sections.forEach((item) => {
-            item.classList.remove('section-show')
-          })
-          section.classList.add('section-show')
-
-        }, 350);
-      } else {
-        sections.forEach((item) => {
-          item.classList.remove('section-show')
-        })
-        section.classList.add('section-show')
-      }
-
-      scrollto(this.hash)
+      // Smooth scroll to section
+      const offsetTop = section.offsetTop - 80; // Account for fixed header
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      })
     }
   }, true)
 
   /**
-   * Activate/show sections on load with hash links
+   * Scroll spy - highlight nav links on scroll
    */
-  window.addEventListener('load', () => {
-    if (window.location.hash) {
-      let initial_nav = select(window.location.hash)
+  window.addEventListener('scroll', () => {
+    let sections = select('section[id]', true)
+    let navlinks = select('#navbar .nav-link', true)
+    
+    let scrollPos = window.scrollY + 200
 
-      if (initial_nav) {
-        let header = select('#header')
-        let navlinks = select('#navbar .nav-link', true)
-
-        header.classList.add('header-top')
-
-        navlinks.forEach((item) => {
-          if (item.getAttribute('href') == window.location.hash) {
-            item.classList.add('active')
-          } else {
-            item.classList.remove('active')
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop
+      const sectionHeight = section.offsetHeight
+      const sectionId = section.getAttribute('id')
+      
+      if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+        navlinks.forEach((link) => {
+          link.classList.remove('active')
+          if (link.getAttribute('href') === '#' + sectionId) {
+            link.classList.add('active')
           }
         })
-
-        setTimeout(function() {
-          initial_nav.classList.add('section-show')
-        }, 350);
-
-        scrollto(window.location.hash)
       }
-    }
-  });
+    })
+  })
 
   /**
    * Skills animation
@@ -249,5 +223,78 @@
    * Initiate Pure Counter 
    */
   new PureCounter();
+
+  /**
+   * Preloader
+   */
+  window.addEventListener('load', () => {
+    const preloader = select('#preloader');
+    if (preloader) {
+      preloader.remove();
+    }
+  });
+
+  /**
+   * Enhanced scroll animations
+   */
+  function initEnhancedScrollAnimations() {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements with animation classes
+    const animatedElements = document.querySelectorAll('[data-aos]');
+    animatedElements.forEach(el => {
+      observer.observe(el);
+    });
+  }
+
+  /**
+   * Smooth scroll with enhanced easing
+   */
+  function smoothScrollTo(target) {
+    const targetElement = document.querySelector(target);
+    if (targetElement) {
+      const targetPosition = targetElement.offsetTop - 80;
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      const duration = 1000;
+      let start = null;
+
+      function animation(currentTime) {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const run = easeInOutCubic(timeElapsed, startPosition, distance, duration);
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+      }
+
+      function easeInOutCubic(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t * t + b;
+        t -= 2;
+        return c / 2 * (t * t * t + 2) + b;
+      }
+
+      requestAnimationFrame(animation);
+    }
+  }
+
+  /**
+   * Initialize enhanced animations when DOM is loaded
+   */
+  document.addEventListener('DOMContentLoaded', function() {
+    initEnhancedScrollAnimations();
+  });
 
 })()
