@@ -400,6 +400,29 @@
             <button type="submit" id="submit-btn">Send Message</button>
           </div>
         </form>
+
+        <!-- Alternative Formspree Form (Uncomment to use) -->
+        <!-- 
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="php-email-form mt-4">
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+            </div>
+            <div class="col-md-6 form-group mt-3 mt-md-0">
+              <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+          </div>
+          <div class="form-group mt-3">
+            <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn-get-started">Send Message</button>
+          </div>
+        </form>
+        -->
       </div>
     </section>
   </main>
@@ -473,12 +496,17 @@
   </script>
 
   <!-- EmailJS Integration Script -->
-  <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-    // Initialize EmailJS with your User ID
+    // Initialize EmailJS with your User ID (v4 syntax)
     (function() {
       emailjs.init("JZuAC-fLdslgkwcEN");
     })();
+
+    // EmailJS configuration loaded
+    window.addEventListener('load', function() {
+      // EmailJS is ready to use
+    });
 
     // Handle form submission
     document.getElementById("contact-form").addEventListener("submit", function(event) {
@@ -503,8 +531,11 @@
         from_email: form.querySelector('input[name="from_email"]').value,
         subject: form.querySelector('input[name="subject"]').value,
         message: form.querySelector('textarea[name="message"]').value,
-        to_name: 'Surya P M'
+        to_name: 'Surya P M',
+        reply_to: form.querySelector('input[name="from_email"]').value
       };
+
+
 
       // Send form data to EmailJS
       emailjs.send('surya_pm', 'template_qmcsomj', formData)
@@ -524,13 +555,27 @@
         }, function(error) {
           // Error
           loading.style.display = "none";
-          errorMessage.textContent = "Sorry, there was an error sending your message. Please try again.";
+          
+          // Provide more specific error messages
+          let errorText = "Sorry, there was an error sending your message. Please try again.";
+          
+          if (error.status === 400) {
+            errorText = "Invalid request. Please check your EmailJS configuration.";
+          } else if (error.status === 401) {
+            errorText = "Authentication failed. Please check your EmailJS User ID.";
+          } else if (error.status === 404) {
+            errorText = "Service or template not found. Please check your EmailJS Service ID and Template ID.";
+          } else if (error.status === 429) {
+            errorText = "Too many requests. Please wait a moment and try again.";
+          } else if (error.status === 500) {
+            errorText = "Server error. Please try again later.";
+          }
+          
+          errorMessage.textContent = errorText;
           errorMessage.style.display = "block";
           sentMessage.style.display = "none";
           submitBtn.disabled = false;
           submitBtn.textContent = "Send Message";
-          
-          console.error("EmailJS Error:", error);
         });
     });
 
