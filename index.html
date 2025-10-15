@@ -700,6 +700,44 @@
         showCursor: true,
         cursorChar: '|'
       });
+
+      // Fallback skills animation
+      function animateSkillsFallback() {
+        const skillsSection = document.getElementById('skills');
+        if (skillsSection) {
+          const progressBars = document.querySelectorAll('.skills .progress-bar');
+          
+          // Reset all progress bars to 0
+          progressBars.forEach(bar => {
+            bar.style.width = '0%';
+          });
+
+          // Animate when section is in view
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                progressBars.forEach((bar, index) => {
+                  const targetWidth = bar.getAttribute('aria-valuenow');
+                  if (targetWidth) {
+                    setTimeout(() => {
+                      bar.style.width = targetWidth + '%';
+                    }, index * 200);
+                  }
+                });
+                observer.unobserve(entry.target);
+              }
+            });
+          }, {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+          });
+
+          observer.observe(skillsSection);
+        }
+      }
+
+      // Initialize skills animation
+      setTimeout(animateSkillsFallback, 500);
     });
 
     // Fallback preloader removal

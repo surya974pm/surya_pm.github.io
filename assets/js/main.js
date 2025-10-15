@@ -132,19 +132,35 @@
   /**
    * Skills animation
    */
-  let skilsContent = select('.skills-content');
-  if (skilsContent) {
-    new Waypoint({
-      element: skilsContent,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = select('.progress .progress-bar', true);
-        progress.forEach((el) => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%'
+  function animateSkills() {
+    const skillsSection = select('#skills');
+    if (skillsSection) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const progressBars = select('.skills .progress-bar', true);
+            progressBars.forEach((bar, index) => {
+              const targetWidth = bar.getAttribute('aria-valuenow');
+              if (targetWidth) {
+                setTimeout(() => {
+                  bar.style.width = targetWidth + '%';
+                }, index * 200); // Stagger the animations
+              }
+            });
+            observer.unobserve(entry.target);
+          }
         });
-      }
-    })
+      }, {
+        threshold: 0.3,
+        rootMargin: '0px 0px -100px 0px'
+      });
+
+      observer.observe(skillsSection);
+    }
   }
+
+  // Initialize skills animation when DOM is loaded
+  document.addEventListener('DOMContentLoaded', animateSkills);
 
 
 

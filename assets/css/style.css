@@ -595,9 +595,9 @@ section {
 }
 
 .skills .progress-bar {
-  width: 1px;
+  width: 0px;
   height: 10px;
-  transition: 0.9s;
+  transition: 0.9s ease-in-out;
   background: linear-gradient(45deg, #00d4ff, #00b8e6);
   border-radius: 5px;
 }
